@@ -1,4 +1,9 @@
+body {
+    background: url("../images/spiration_dark.png") repeat;
+}
+
 .jumbotron {
-    background-color: black;
+    background: url("../images/train.jpg") no-repeat center center;
     color: white;
 }
+
