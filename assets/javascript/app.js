@@ -5,7 +5,21 @@
 let database = firebase.database();
 
 //Initial Values.
+const serverTime = firebase.database.ServerValue.TIMESTAMP;
+setInterval(checkStatus, 1000);
 
+function checkStatus() {
+    let trainCheck = database.ref('Train-Activity');
+    trainCheck.once("value")
+        .then(function(snapshot) {
+            var key = snapshot.key;
+            if (key === "null") {
+                console.log("Nothing to Show Here");
+            } else {
+                console.log("Data to Display");
+            }
+        })
+}
 
 $("#add-train").on("click", function (event) {
     event.preventDefault();
