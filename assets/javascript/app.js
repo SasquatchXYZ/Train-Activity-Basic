@@ -16,7 +16,6 @@ function addTrainData() {
         frequency: $("#frequency-input").val().trim(),
     };
 
-    /*    newTrain.postkey = database.ref('Train-Activity').push().key;*/
 
     database.ref('Train-Activity').push(newTrain);
 
