@@ -85,8 +85,8 @@ function checkStatus() {
 $("#add-train").on("click", function (event) {
     event.preventDefault();
     if (($("#train-name-input").val() === "") || ($("#destination-input").val() === "") ||
-        ($("#first-time-input").val()) === "" || ($("#frequency-input").val() === "")) {
-        $('.modal').modal('show');
+        ($("#first-time-input").val() === "") || ($("#frequency-input").val() === "")) {
+        $('#warning-modal').modal('show');
     } else {
         addTrainData()
     }
@@ -104,13 +104,22 @@ $(document).on("click", "#remove-train", function () {
             checkStatus();
         })
         .catch(function (error) {
-            console.log('Remove failed: ' + error.message)
+            console.log(`Remove failed: ${error.message}`)
         })
 })
 
     .on("click", "#edit-train", function () {
         let postID = $(this).attr("data-edit");
         console.log(postID);
+        let updateTrain = database.ref(`Train-Activity/${postID}`);
+        updateTrain.on('value', function(snapshot) {
+            let editTrain = snapshot.val();
+            console.log(editTrain);
+            $("#train-name-update").attr("placeholder", editTrain.name);
+            $("#destination-update").attr("placeholder", editTrain.destination);
+            $("#first-time-update").attr("placeholder", editTrain.first);
+            $("#frequency-update").attr("placeholder", editTrain.frequency);
+        });
         $("#edit-modal").modal("show");
         $("#update-data").attr("data-update", postID);
     })
@@ -120,7 +129,7 @@ $(document).on("click", "#remove-train", function () {
         console.log(postID);
 
         if (($("#train-name-update").val() === "") || ($("#destination-update").val() === "") ||
-            ($("#first-time-update").val()) === "" || ($("#frequency-update").val() === "")) {
+            ($("#first-time-update").val() === "") || ($("#frequency-update").val() === "")) {
             $('#edit-modal').modal('show');
         } else {
             let updatedTrain = {
