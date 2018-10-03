@@ -16,7 +16,6 @@ function addTrainData() {
         frequency: $("#frequency-input").val().trim(),
     };
 
-
     database.ref('Train-Activity').push(newTrain);
 
     $("#train-name-input").val("");
