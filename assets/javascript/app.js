@@ -1,5 +1,13 @@
 // Initialize Firebase
-
+var config = {
+    apiKey: "AIzaSyCqjjTaOUWLlM2f4nWsxvS7lfAdIS2trPQ",
+    authDomain: "gt201808-class-activities.firebaseapp.com",
+    databaseURL: "https://gt201808-class-activities.firebaseio.com",
+    projectId: "gt201808-class-activities",
+    storageBucket: "gt201808-class-activities.appspot.com",
+    messagingSenderId: "554263392638"
+};
+firebase.initializeApp(config);
 
 // Create a variable to reference the database.
 let database = firebase.database();
@@ -76,7 +84,7 @@ $("#add-train").on("click", function (event) {
 
     if (($("#train-name-input").val() === "") || ($("#destination-input").val() === "") ||
         ($("#first-time-input").val() === "") || ($("#frequency-input").val() === "")) {
-        $('.modal').modal('show');
+        $('#warning-modal').modal('show');
     } else {
         addTrainData()
     }
@@ -103,6 +111,7 @@ $(document).on("click", "#remove-train", function() {
         $("#edit-modal").modal("show");
         $("#update-data").attr("data-update", postID);
     })
+
     .on("click", "#update-data", function() {
         let postID = $(this).attr("data-update");
         console.log(postID);
@@ -127,7 +136,7 @@ $(document).on("click", "#remove-train", function() {
             database.ref(`Train-Activity/${postID}`).set(updatedTrain);
             checkStatus();
         }
-    })
+    });
 
 database.ref('Train-Activity').on("child_added", function (childSnapshot) {
     let train = childSnapshot.val();
