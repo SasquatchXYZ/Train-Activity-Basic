@@ -25,17 +25,15 @@ function addTrainData() {
 }
 
 function renderTrains(train, key) {
-    // console.log(train);
     let firstTimeConverted = moment(train[key].first, "HHmm").subtract(1, "years");
-    // console.log(`First Train Time: ${firstTimeConverted}`);
+
     let timeDifference = moment().diff(moment(firstTimeConverted), "minutes");
-    // console.log(`Time Difference: ${timeDifference}`);
+
     let timeRemaining = timeDifference % train[key].frequency;
-    // console.log(timeRemaining);
+
     let timeTilNext = train[key].frequency - timeRemaining;
-    // console.log(`Minutes Until Train: ${timeTilNext}`);
+
     let nextTrain = moment().add(timeTilNext, "minutes");
-    // console.log(`Arrival Time: ${moment(nextTrain).format("hh:mm A")}`);
 
     $(".table tbody").append(`<tr>
                                 <td>${train[key].name}</td>
@@ -65,15 +63,9 @@ function checkStatus() {
                         $(".table tbody").empty();
                         for (var key in train) {
                             if (train.hasOwnProperty(key)) {
-                                // console.log(train);
-                                // console.log(key);
-
                                 renderTrains(train, key);
-
                             }
-
                         }
-
                     }, function (errorObject) {
                         console.log(`Errors Handled: ${errorObject.code}`);
                     });
