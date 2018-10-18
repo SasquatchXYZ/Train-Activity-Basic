@@ -50,9 +50,9 @@ function renderTrains(train, key) {
                                 <td>${moment(nextTrain).format("hh:mm A")}</td>
                                 <td>${timeTilNext}</td>
                                 <td><div class="btn-group btn-group-sm" role="group" aria-label="Manage">
-                                        <button type="button" class="btn btn-secondary" id="edit-train" data-edit="${key}">Edit</button>
-                                        <button type="button" class="btn btn-secondary" id="remove-train" data-remove="${key}">Remove</button>
-                                    </div></td>
+                                    <button type="button" class="btn btn-secondary" id="edit-train" data-edit="${key}">Edit</button>
+                                    <button type="button" class="btn btn-secondary" id="remove-train" data-remove="${key}">Remove</button>
+                                </div></td>
                               </tr>`);
 }
 
@@ -63,16 +63,18 @@ function checkStatus() {
             var key = snapshot.key;
             if (key === "null") {
             } else {
+                // console.log("Data to Display");
                 trainCheck.once("value")
                     .then(function (childSnapshot) {
                         let train = childSnapshot.val();
+                        // console.log(train);
                         $(".table tbody").empty();
                         for (var key in train) {
                             if (train.hasOwnProperty(key)) {
                                 renderTrains(train, key);
                             }
                         }
-                    }, function(errorObject) {
+                    }, function (errorObject) {
                         console.log(`Errors Handled: ${errorObject.code}`);
                     });
             }
@@ -81,16 +83,16 @@ function checkStatus() {
 
 $("#add-train").on("click", function (event) {
     event.preventDefault();
-
     if (($("#train-name-input").val() === "") || ($("#destination-input").val() === "") ||
         ($("#first-time-input").val() === "") || ($("#frequency-input").val() === "")) {
         $('#warning-modal').modal('show');
     } else {
         addTrainData()
     }
+
 });
 
-$(document).on("click", "#remove-train", function() {
+$(document).on("click", "#remove-train", function () {
     let postID = $(this).attr("data-remove");
     console.log(postID);
 
@@ -108,11 +110,20 @@ $(document).on("click", "#remove-train", function() {
     .on("click", "#edit-train", function () {
         let postID = $(this).attr("data-edit");
         console.log(postID);
+        let updateTrain = database.ref(`Train-Activity/${postID}`);
+        updateTrain.on('value', function(snapshot) {
+            let editTrain = snapshot.val();
+            console.log(editTrain);
+            $("#train-name-update").attr("placeholder", editTrain.name);
+            $("#destination-update").attr("placeholder", editTrain.destination);
+            $("#first-time-update").attr("placeholder", editTrain.first);
+            $("#frequency-update").attr("placeholder", editTrain.frequency);
+        });
         $("#edit-modal").modal("show");
         $("#update-data").attr("data-update", postID);
     })
 
-    .on("click", "#update-data", function() {
+    .on("click", "#update-data", function () {
         let postID = $(this).attr("data-update");
         console.log(postID);
 
@@ -124,7 +135,7 @@ $(document).on("click", "#remove-train", function() {
                 name: $("#train-name-update").val().trim(),
                 destination: $("#destination-update").val().trim(),
                 first: $("#first-time-update").val().trim(),
-                frequency: $("#frequency-update").val().trim(),
+                frequency: $("#frequency-update").val().trim()
             };
             console.log(updatedTrain);
 
@@ -136,20 +147,19 @@ $(document).on("click", "#remove-train", function() {
             database.ref(`Train-Activity/${postID}`).set(updatedTrain);
             checkStatus();
         }
+
     });
+
 
 database.ref('Train-Activity').on("child_added", function (childSnapshot) {
     let train = childSnapshot.val();
     let key = childSnapshot.key;
+    // console.log(childSnapshot.key);
 
     let firstTimeConverted = moment(train.first, "HHmm").subtract(1, "years");
-
     let timeDifference = moment().diff(moment(firstTimeConverted), "minutes");
-
     let timeRemaining = timeDifference % train.frequency;
-
     let timeTilNext = train.frequency - timeRemaining;
-
     let nextTrain = moment().add(timeTilNext, "minutes");
 
     $(".table tbody").append(`<tr>
@@ -163,6 +173,7 @@ database.ref('Train-Activity').on("child_added", function (childSnapshot) {
                                         <button type="button" class="btn btn-secondary" id="remove-train" data-remove="${key}">Remove</button>
                                     </div></td>
                               </tr>`);
+
 }, function (errorObject) {
     console.log(`Errors Handled: ${errorObject.code}`);
 });
