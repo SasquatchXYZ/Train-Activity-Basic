@@ -1,5 +1,13 @@
 // Initialize Firebase
-
+var config = {
+    apiKey: "AIzaSyCqjjTaOUWLlM2f4nWsxvS7lfAdIS2trPQ",
+    authDomain: "gt201808-class-activities.firebaseapp.com",
+    databaseURL: "https://gt201808-class-activities.firebaseio.com",
+    projectId: "gt201808-class-activities",
+    storageBucket: "gt201808-class-activities.appspot.com",
+    messagingSenderId: "554263392638"
+};
+firebase.initializeApp(config);
 
 // Create a variable to reference the database.
 let database = firebase.database();
