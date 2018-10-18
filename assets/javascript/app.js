@@ -111,7 +111,7 @@ $(document).on("click", "#remove-train", function () {
         let postID = $(this).attr("data-edit");
         console.log(postID);
         let updateTrain = database.ref(`Train-Activity/${postID}`);
-        updateTrain.on('value', function(snapshot) {
+        updateTrain.on('value', function (snapshot) {
             let editTrain = snapshot.val();
             console.log(editTrain);
             $("#train-name-update").attr("placeholder", editTrain.name);
